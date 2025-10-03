@@ -152,6 +152,7 @@ impl HttpExporterBuilder {
             #[cfg(all(
                 not(feature = "reqwest-client"),
                 not(feature = "reqwest-blocking-client"),
+                not(feature = "fastly-client"),
                 feature = "hyper-client"
             ))]
             {
@@ -162,6 +163,7 @@ impl HttpExporterBuilder {
             #[cfg(all(
                 not(feature = "hyper-client"),
                 not(feature = "reqwest-blocking-client"),
+                not(feature = "fastly-client"),
                 feature = "reqwest-client"
             ))]
             {
@@ -175,6 +177,7 @@ impl HttpExporterBuilder {
             #[cfg(all(
                 not(feature = "hyper-client"),
                 not(feature = "reqwest-client"),
+                not(feature = "fastly-client"),
                 feature = "reqwest-blocking-client"
             ))]
             {
@@ -189,6 +192,15 @@ impl HttpExporterBuilder {
                     .join()
                     .unwrap(), // TODO: Return ExporterBuildError::ThreadSpawnFailed
                 ) as Arc<dyn HttpClient>);
+            }
+            #[cfg(all(
+                not(feature = "hyper-client"),
+                not(feature = "reqwest-client"),
+                not(feature = "reqwest-blocking-client"),
+                feature = "fastly-client"
+            ))]
+            {
+                http_client = Some(Arc::new(opentelemetry_http::fastly::FastlyClient::new("otlp".to_string())) as Arc<dyn HttpClient>);
             }
         }
 
