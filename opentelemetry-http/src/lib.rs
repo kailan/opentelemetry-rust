@@ -86,7 +86,7 @@ pub trait HttpClient: Debug + Send + Sync {
 }
 
 #[cfg(feature = "fastly")]
-mod fastly {
+pub mod fastly {
     use fastly::http::{Request as FastlyRequest, Response as FastlyResponse};
     use http::{HeaderName, HeaderValue};
     use opentelemetry::otel_debug;
@@ -95,6 +95,13 @@ mod fastly {
 
     #[derive(Debug)]
     pub struct FastlyClient(String);
+
+    impl FastlyClient {
+        /// Create a new FastlyClient with the specified backend name.
+        pub fn from_backend(backend: impl Into<String>) -> Self {
+            Self(backend.into())
+        }
+    }
 
     #[async_trait]
     impl HttpClient for FastlyClient {

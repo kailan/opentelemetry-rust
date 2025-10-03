@@ -200,7 +200,7 @@ impl HttpExporterBuilder {
                 feature = "fastly-client"
             ))]
             {
-                http_client = Some(Arc::new(opentelemetry_http::fastly::FastlyClient::new("otlp".to_string())) as Arc<dyn HttpClient>);
+                http_client = Some(Arc::new(opentelemetry_http::fastly::FastlyClient::from_backend("otlp".to_string())) as Arc<dyn HttpClient>);
             }
         }
 

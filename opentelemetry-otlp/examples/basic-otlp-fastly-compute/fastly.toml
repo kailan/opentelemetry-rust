@@ -1,0 +1,16 @@
+# This file describes a Fastly Compute package. To learn more visit:
+# https://www.fastly.com/documentation/reference/compute/fastly-toml
+
+authors = ["kblanks@fastly.com"]
+cloned_from = "https://github.com/fastly/compute-starter-kit-rust-empty"
+description = ""
+language = "rust"
+manifest_version = 3
+name = "basic-otlp-fastly-compute"
+service_id = ""
+
+[local_server.backends.otlp]
+  url = "http://127.0.0.1:4318"
+
+[scripts]
+  build = "cargo build --profile release"
