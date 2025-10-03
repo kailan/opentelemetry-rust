@@ -17,11 +17,13 @@ reqwest = ["dep:reqwest"]
 reqwest-blocking = ["dep:reqwest", "reqwest/blocking"]
 reqwest-rustls = ["dep:reqwest", "reqwest/rustls-tls-native-roots"]
 reqwest-rustls-webpki-roots = ["dep:reqwest", "reqwest/rustls-tls-webpki-roots"]
+fastly = ["dep:fastly"]
 internal-logs = ["opentelemetry/internal-logs"]
 
 [dependencies]
 async-trait = { workspace = true }
 bytes = { workspace = true }
+fastly = { workspace = true, optional = true }
 http = { workspace = true }
 http-body-util = { workspace = true, optional = true }
 hyper = { workspace = true, optional = true }

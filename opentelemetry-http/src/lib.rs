@@ -85,6 +85,49 @@ pub trait HttpClient: Debug + Send + Sync {
     async fn send_bytes(&self, request: Request<Bytes>) -> Result<Response<Bytes>, HttpError>;
 }
 
+#[cfg(feature = "fastly")]
+mod fastly {
+    use fastly::http::{Request as FastlyRequest, Response as FastlyResponse};
+    use http::{HeaderName, HeaderValue};
+    use opentelemetry::otel_debug;
+
+    use super::{async_trait, Bytes, HttpClient, HttpError, Request, Response};
+
+    #[derive(Debug)]
+    pub struct FastlyClient(String);
+
+    #[async_trait]
+    impl HttpClient for FastlyClient {
+        async fn send_bytes(&self, request: Request<Bytes>) -> Result<Response<Bytes>, HttpError> {
+            otel_debug!(name: "FastlyClient.Send");
+
+            let mut req = FastlyRequest::new(request.method().clone(), request.uri().to_string());
+            for header in request.headers() {
+                req.append_header(header.0, header.1.clone());
+            }
+            req.set_body(request.body().to_vec());
+
+            let mut resp: FastlyResponse = req.send(self.0.clone()).map_err(|e| {
+                let err: HttpError = format!("failed to send request: {e}").into();
+                err
+            })?;
+
+            let mut http_response = Response::builder()
+                .status(resp.get_status())
+                .body(resp.take_body_bytes().into())?;
+
+            for (header_name, header_value) in resp.get_headers() {
+                http_response.headers_mut().insert(
+                    HeaderName::from_bytes(header_name.as_str().as_bytes())?,
+                    HeaderValue::from_bytes(header_value.as_bytes())?,
+                );
+            }
+
+            Ok(http_response)
+        }
+    }
+}
+
 #[cfg(feature = "reqwest")]
 mod reqwest {
     use opentelemetry::otel_debug;

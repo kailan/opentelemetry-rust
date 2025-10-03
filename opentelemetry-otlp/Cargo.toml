@@ -88,6 +88,7 @@ reqwest-client = ["reqwest", "opentelemetry-http/reqwest"]
 reqwest-rustls = ["reqwest", "opentelemetry-http/reqwest-rustls"]
 reqwest-rustls-webpki-roots = ["reqwest", "opentelemetry-http/reqwest-rustls-webpki-roots"]
 hyper-client = ["opentelemetry-http/hyper"]
+fastly-client = ["opentelemetry-http/fastly"]
 
 # test
 integration-testing = ["tonic", "prost", "tokio/full", "trace", "logs"]

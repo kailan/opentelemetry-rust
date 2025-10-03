@@ -22,6 +22,7 @@ debug = 1
 async-trait = "0.1"
 bytes = "1"
 criterion = "0.5"
+fastly = "0.11"
 futures-core = "0.3"
 futures-executor = "0.3"
 futures-util = { version = "0.3", default-features = false }
